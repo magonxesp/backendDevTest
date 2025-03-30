@@ -13,7 +13,6 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
 public class ProductsApiClientTest extends IntegrationTestCase {
     @Autowired
     private ProductsApiClient productsApiClient;

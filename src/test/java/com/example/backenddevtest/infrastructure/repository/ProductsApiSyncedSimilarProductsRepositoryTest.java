@@ -9,7 +9,6 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
 public class ProductsApiSyncedSimilarProductsRepositoryTest extends IntegrationTestCase {
     @Autowired
     private ProductsApiSyncedSimilarProductsRepository repository;
