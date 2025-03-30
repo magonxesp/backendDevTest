@@ -40,3 +40,12 @@ services:
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: example
+  similar:
+    build: .
+    ports:
+      - "5001:5000"
+    depends_on:
+      - mongodb
+    environment:
+      'spring.data.mongodb.uri': mongodb://root:example@mongodb:27017/backend-dev-test?authSource=admin
+      'products-api.cache.base-url': http://simulado

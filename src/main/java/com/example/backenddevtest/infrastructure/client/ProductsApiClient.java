@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import okhttp3.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -15,17 +16,19 @@ import java.util.Optional;
 
 @Service
 public class ProductsApiClient {
-    private static final String BASE_URL = "http://localhost:3001";
     private final ObjectMapper objectMapper = new ObjectMapper();
     private final ProductDetailMapper mapper;
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
+    @Value("${products-api.cache.base-url:http://localhost:3001}")
+    private String baseUrl = "http://localhost:3001";
 
     public ProductsApiClient(ProductDetailMapper mapper) {
         this.mapper = mapper;
     }
 
     public Optional<ProductDetail> getProductDetail(String productId) throws IOException {
-        String url = String.format("%s/product/%s", BASE_URL, productId);
+        String url = String.format("%s/product/%s", baseUrl, productId);
         Request request = new Request.Builder()
                 .method("GET", null)
                 .url(url)
@@ -46,7 +49,7 @@ public class ProductsApiClient {
     }
 
     public List<String> getProductSimilarIds(String productId) throws IOException {
-        String url = String.format("%s/product/%s/similarids", BASE_URL, productId);
+        String url = String.format("%s/product/%s/similarids", baseUrl, productId);
         Request request = new Request.Builder()
                 .method("GET", null)
                 .url(url)
