@@ -42,25 +42,33 @@ public class ProductsApiSyncedSimilarProductsRepository implements SimilarProduc
     @Override
     @Transactional
     public List<ProductDetail> findSimilar(String productId) {
-        List<ProductDetail> similarProducts = List.of();
         long now = Instant.now().toEpochMilli();
+        boolean needSynchronization = synchronizedAt.get() == 0 || now > synchronizedAt.get() + ttl;
 
-        if (synchronizedAt.get() == 0 || now > synchronizedAt.get() + ttl) {
-            similarProducts = fetchSimilarProducts(productId);
-            synchronizeSimilarProducts(productId, similarProducts);
-            synchronizedAt.set(now);
+        if (needSynchronization) {
+            return fetchAndSynchronize(productId);
         }
 
-        if (!similarProducts.isEmpty()) {
-            return similarProducts;
-        }
-
+        List<ProductDetail> similarProducts = List.of();
         Optional<MongoDBSimilarProductsDocument> document = similarRepository.findById(productId);
-        if (document.isEmpty()) {
-            return List.of();
+        if (document.isPresent()) {
+            similarProducts = productDetailRepository.findAllById(document.get().getSimilarIds());
         }
 
-        return productDetailRepository.findAllById(document.get().getSimilarIds());
+        if (similarProducts.isEmpty()) {
+            return fetchAndSynchronize(productId);
+        }
+
+        return similarProducts;
+    }
+
+    private List<ProductDetail> fetchAndSynchronize(String productId) {
+        long now = Instant.now().toEpochMilli();
+        List<ProductDetail> similarProducts = fetchSimilarProducts(productId);
+        synchronizeSimilarProducts(productId, similarProducts);
+        synchronizedAt.set(now);
+
+        return similarProducts;
     }
 
     private List<ProductDetail> fetchSimilarProducts(String productId) {
