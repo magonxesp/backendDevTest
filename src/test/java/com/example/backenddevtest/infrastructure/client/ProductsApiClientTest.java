@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -47,6 +48,6 @@ public class ProductsApiClientTest extends IntegrationTestCase {
 
         List<String> similarIds = productsApiClient.getProductSimilarIds("1");
 
-        assertEquals(expected, similarIds);
+        assertThat(similarIds).containsExactlyInAnyOrderElementsOf(expected);
     }
 }

@@ -26,7 +26,7 @@ public class ProductsApiSyncedSimilarProductsRepository implements SimilarProduc
 
     @Value("${products-api.cache.ttl-ms:60000}")
     private long ttl = 60_000;
-    private static AtomicLong synchronizedAt = new AtomicLong(0);
+    private static final AtomicLong synchronizedAt = new AtomicLong(0);
 
     public ProductsApiSyncedSimilarProductsRepository(
             MongoDBSimilarProductsJPARepository similarRepository,

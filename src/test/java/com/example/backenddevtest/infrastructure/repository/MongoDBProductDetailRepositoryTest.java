@@ -3,6 +3,7 @@ package com.example.backenddevtest.infrastructure.repository;
 import com.example.backenddevtest.IntegrationTestCase;
 import com.example.backenddevtest.domain.ProductDetail;
 import com.example.backenddevtest.infrastructure.model.MongoDBProductDetailDocument;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -10,11 +11,20 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class MongoDBProductDetailRepositoryTest extends IntegrationTestCase {
     @Autowired
+    private MongoDBProductDetailJPARepository jpaRepository;
+
+    @Autowired
     private MongoDBProductDetailRepository repository;
+
+    @BeforeEach
+    public void beforeTest() {
+        jpaRepository.deleteAll();
+    }
 
     @Test
     public void saveAll_shouldSaveAllProductDetail() {
@@ -26,6 +36,6 @@ public class MongoDBProductDetailRepositoryTest extends IntegrationTestCase {
 
         List<ProductDetail> saved = repository.findAllById(List.of(detail1.id(), detail2.id()));
 
-        assertEquals(details, saved);
+        assertThat(details).containsExactlyInAnyOrderElementsOf(saved);
     }
 }

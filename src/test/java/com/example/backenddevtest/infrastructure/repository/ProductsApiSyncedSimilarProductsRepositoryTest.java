@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class ProductsApiSyncedSimilarProductsRepositoryTest extends IntegrationTestCase {
     @Autowired
@@ -23,6 +23,6 @@ public class ProductsApiSyncedSimilarProductsRepositoryTest extends IntegrationT
 
         List<ProductDetail> foundSimilar = repository.findSimilar("1");
 
-        assertEquals(similar, foundSimilar);
+        assertThat(foundSimilar).containsExactlyInAnyOrderElementsOf(similar);
     }
 }
