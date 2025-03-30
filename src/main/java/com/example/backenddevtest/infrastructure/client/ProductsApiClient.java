@@ -5,6 +5,8 @@ import com.example.backenddevtest.infrastructure.mapper.ProductDetailMapper;
 import com.example.backenddevtest.infrastructure.model.ProductsApiProductDetail;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import okhttp3.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -16,15 +18,17 @@ public class ProductsApiClient {
     private static final String BASE_URL = "http://localhost:3001";
     private final ObjectMapper objectMapper = new ObjectMapper();
     private final ProductDetailMapper mapper;
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     public ProductsApiClient(ProductDetailMapper mapper) {
         this.mapper = mapper;
     }
 
     public Optional<ProductDetail> getProductDetail(String productId) throws IOException {
+        String url = String.format("%s/product/%s", BASE_URL, productId);
         Request request = new Request.Builder()
                 .method("GET", null)
-                .url(String.format("%s/product/%s", BASE_URL, productId))
+                .url(url)
                 .build();
 
         OkHttpClient client = new OkHttpClient();
@@ -32,6 +36,7 @@ public class ProductsApiClient {
             ResponseBody body = response.body();
 
             if (response.code() != 200 || body == null) {
+                logger.warn("Products api {} responded with status code {}", url, response.code());
                 return Optional.empty();
             }
 
@@ -41,9 +46,10 @@ public class ProductsApiClient {
     }
 
     public List<String> getProductSimilarIds(String productId) throws IOException {
+        String url = String.format("%s/product/%s/similarids", BASE_URL, productId);
         Request request = new Request.Builder()
                 .method("GET", null)
-                .url(String.format("%s/product/%s/similarids", BASE_URL, productId))
+                .url(url)
                 .build();
 
         OkHttpClient client = new OkHttpClient();
@@ -51,6 +57,7 @@ public class ProductsApiClient {
             ResponseBody body = response.body();
 
             if (response.code() != 200 || body == null) {
+                logger.warn("Products api {} responded with status code {}", url, response.code());
                 return List.of();
             }
 
