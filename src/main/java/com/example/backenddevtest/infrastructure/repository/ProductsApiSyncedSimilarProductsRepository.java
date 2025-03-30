@@ -41,14 +41,16 @@ public class ProductsApiSyncedSimilarProductsRepository implements SimilarProduc
     @Override
     @Transactional
     public List<ProductDetail> findSimilar(String productId) {
-        List<ProductDetail> similarProducts;
+        List<ProductDetail> similarProducts = List.of();
         long now = Instant.now().toEpochMilli();
 
         if (synchronizedAt.get() == 0 || now > synchronizedAt.get() + ttl) {
             similarProducts = fetchSimilarProducts(productId);
-            saveSimilarProducts(productId, similarProducts);
+            synchronizeSimilarProducts(productId, similarProducts);
             synchronizedAt.set(now);
+        }
 
+        if (!similarProducts.isEmpty()) {
             return similarProducts;
         }
 
@@ -78,7 +80,7 @@ public class ProductsApiSyncedSimilarProductsRepository implements SimilarProduc
         }
     }
 
-    private void saveSimilarProducts(String productId, List<ProductDetail> similar) {
+    private void synchronizeSimilarProducts(String productId, List<ProductDetail> similar) {
         if (similar.isEmpty()) {
             return;
         }
