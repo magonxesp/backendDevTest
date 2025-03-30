@@ -2,6 +2,7 @@ package com.example.backenddevtest.infrastructure.controller;
 
 import com.example.backenddevtest.IntegrationTestCase;
 import com.example.backenddevtest.domain.ProductDetail;
+import com.example.backenddevtest.infrastructure.repository.MongoDBProductDetailJPARepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.web.client.TestRestTemplate;

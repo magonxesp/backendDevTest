@@ -1,5 +1,9 @@
 package com.example.backenddevtest;
 
+import com.example.backenddevtest.infrastructure.repository.MongoDBProductDetailJPARepository;
+import com.example.backenddevtest.infrastructure.repository.MongoDBSimilarProductsJPARepository;
+import org.junit.jupiter.api.BeforeEach;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.test.context.DynamicPropertyRegistry;
@@ -13,6 +17,18 @@ public abstract class IntegrationTestCase {
 
     @LocalServerPort
     protected int port;
+
+    @Autowired
+    private MongoDBProductDetailJPARepository productDetailJPARepository;
+
+    @Autowired
+    private MongoDBSimilarProductsJPARepository similarProductsJPARepository;
+
+    @BeforeEach
+    public void beforeTest() {
+        productDetailJPARepository.deleteAll();
+        similarProductsJPARepository.deleteAll();
+    }
 
     @DynamicPropertySource
     static void setupProperties(DynamicPropertyRegistry registry) {

@@ -16,15 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class MongoDBProductDetailRepositoryTest extends IntegrationTestCase {
     @Autowired
-    private MongoDBProductDetailJPARepository jpaRepository;
-
-    @Autowired
     private MongoDBProductDetailRepository repository;
-
-    @BeforeEach
-    public void beforeTest() {
-        jpaRepository.deleteAll();
-    }
 
     @Test
     public void saveAll_shouldSaveAllProductDetail() {

@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.time.Instant;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Function;
 
@@ -54,9 +55,12 @@ public class ProductsApiSyncedSimilarProductsRepository implements SimilarProduc
             return similarProducts;
         }
 
-        return similarRepository.findById(productId)
-                .map(document -> productDetailRepository.findAllById(document.getSimilarIds()))
-                .orElse(List.of());
+        Optional<MongoDBSimilarProductsDocument> document = similarRepository.findById(productId);
+        if (document.isEmpty()) {
+            return List.of();
+        }
+
+        return productDetailRepository.findAllById(document.get().getSimilarIds());
     }
 
     private List<ProductDetail> fetchSimilarProducts(String productId) {
