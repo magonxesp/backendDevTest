@@ -4,6 +4,6 @@ WORKDIR /app
 
 COPY . .
 
-RUN ./gradlew bootJar -x test
+RUN ./mvnw clean package -DskipTests
 
-CMD ["java", "-jar", "/app/build/libs/backend-dev-test.jar"]
+CMD ["java", "-jar", "/app/target/backend-dev-test.jar"]
